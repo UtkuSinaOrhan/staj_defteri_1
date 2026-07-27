@@ -1,0 +1,6 @@
+23 temmuz 2026
+
+proje için çalıştım 
+localde docker compose ile projeyi ayağa kaldırdım
+.env dosyasını inceledim 
+temel olarak proje üzerinde bilgi edindim ve gerekli araştırmaları yaptım.

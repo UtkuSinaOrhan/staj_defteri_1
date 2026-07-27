@@ -1,0 +1,8 @@
+24 temmuz 2026
+
+araştırmalar sonucunda uygulama:
+- barındırdığı niteliklerini yerine getiriyor mu
+- özellikleri düzgün çalışıyor mu
+diye kabataslak kontrol ettim
+
+ollama kurulumu ve serve komutu ile ilgili problemler yaşadım.
