@@ -1,0 +1,9 @@
+28 temmuz 2026
+
+- README.md güncellendi.
+- docker-compose.yml, gelen talepler doğrultusunda düzenlendi.
+- oto4t/oto4t-backend/.env.example dosyası eklendi.
+- oto4t/oto4t-frontend/.env.example dosyası eklendi.
+- oto4t/oto4t-backend/requirements.txt dosyasındaki psycopg2-binary sürümü en güncel sürümle değiştirildi.
+- Tüm .env dosyaları .gitignore'a eklendi.
+- branch ile repoda (https://github.com/ismailunsall/oto4t) PR açtım.
