@@ -1,0 +1,4 @@
+29 temmuz 2026
+
+- docker-compose.yml dosyası ve README.md dosyası üzerinde feedbacklere göre değişiklikler yaptım.
+- README.md ve README-tr.md olacak şekilde ingilizce ve türkçe iki ayrı readme dosyası oluşturdum.
