@@ -1,0 +1,145 @@
+31 temmuz 2026
+
+issue:
+Research whether the backend and the frontend should stay separate or be combined, and collect the results here.
+
+Why this matters
+The goal is to run OTO4T on free hosting that stays online and updates itself when we push. Hugging Face is the first target, other servers come after that. This decision is the starting point, because the steps that follow — researching free hosting, deploying under the oto4t name with a domain, and setting up automatic deploys — all depend on which option we pick.
+
+Points to cover
+Which option is better for deployment and for day-to-day management?
+Being able to deploy on Hugging Face later is a consideration — which option fits that better?
+What does each option require in terms of configuration? The frontend's API address is baked in at build time, and the backend has a CORS setting that depends on the frontend address.
+What is actually free on Hugging Face? A static Space and a Docker Space are not the same thing — check what each one allows and where the limits are.
+Links
+Hugging Face:
+
+Spaces overview — https://huggingface.co/docs/hub/spaces-overview
+Static Spaces (frontend) — https://huggingface.co/docs/hub/spaces-sdks-static
+Docker Spaces (backend) — https://huggingface.co/docs/hub/spaces-sdks-docker
+Pricing and hardware — https://huggingface.co/pricing
+Alternative for hosting the frontend:
+
+Cloudflare Pages — https://developers.cloudflare.com/pages/
+For the two configuration details above:
+
+Vite environment variables, and why they are fixed at build time — https://vite.dev/guide/env-and-mode.html
+FastAPI CORS — https://fastapi.tiangolo.com/tutorial/cors/
+Free always-on servers for the backend are researched in the next step, not here.
+
+Outcome
+A short comparison of both options and a recommendation, posted in this issue.
+
+araştıralar ve çözüm önerim:
+
+# OTO4T — Frontend / Backend Deployment Kararı
+
+> **Konu:** Backend ve frontend'in aynı Space'te birleşik mi, yoksa ayrı Space/repo olarak mı tutulacağı.
+> **Bağlam:** OTO4T'nin ücretsiz hosting üzerinde sürekli çalışmasını (always-on) ve push sonrası otomatik güncellenmesini sağlamak. İlk hedef Hugging Face, sonraki adımlarda başka sunucular değerlendirilecek.
+> **Bu karar**, sonrasında gelecek adımların (ücretsiz sunucu araştırması, `oto4t` adıyla domain'li deploy, otomatik deploy kurulumu) temelini oluşturuyor.
+
+---
+
+## Sonuç (TL;DR)
+
+**Frontend ve backend ayrı tutulmalı.**
+
+- Frontend → Hugging Face **Static Space** (veya alternatif olarak Cloudflare Pages)
+- Backend → Hugging Face **Docker Space**
+
+Ayrı tutmanın bedeli sadece iki küçük config ayarı (build-time API adresi + CORS); karşılığında çok daha temiz bir deploy/yönetim modeli ve HF'in SDK yapısıyla birebir uyum kazanılıyor.
+
+---
+
+## 1. Deployment ve günlük yönetim açısından hangisi daha iyi?
+
+**Ayrı tutmak daha avantajlı.**
+
+- Frontend sadece statik build çıktısı, backend ise sürekli çalışan bir process. İkisinin lifecycle'ı (deploy sıklığı, restart ihtiyacı, kaynak ihtiyacı) tamamen farklı. Ayrı tutulunca biri bozulduğunda diğeri etkilenmiyor; ayrı ayrı log/rollback/debug yapılabiliyor.
+- Hugging Face Spaces bu ayrımı zaten SDK seviyesinde dayatıyor: bir Space ya `sdk: static` ya da `sdk: docker` olabiliyor, ikisi aynı anda değil. "Tek repo" seçeneği, FastAPI'nin build edilmiş statik dosyaları `StaticFiles` ile servis etmesini gerektirir — teknik olarak mümkün ama iki farklı teknolojiyi tek deploy pipeline'ında zorlamak anlamına gelir.
+- Birleştirmenin tek gerçek avantajı: aynı origin'den servis edildiği için CORS derdi tamamen ortadan kalkar. Ama bu, ayrı tutup CORS'u doğru configure etmekten çok daha büyük bir mimari bedel (bkz. Bölüm 3).
+
+## 2. Hugging Face'te ileride deploy etme açısından hangisi uyar?
+
+Hugging Face Spaces üç SDK seçeneği sunuyor: **Gradio**, **Docker**, **Static**. Bizim durumumuzda:
+
+| Parça | HF karşılığı |
+|---|---|
+| Frontend (React/Vite) | **Static Space** |
+| Backend (FastAPI) | **Docker Space** |
+
+Static Space'ler, `app_build_command` ve `app_file` ayarlarıyla build adımını destekliyor:
+
+> Static Spaces support adding a custom build step before serving your static assets — bu, React/Vite gibi build gerektiren frontend framework'leri için kullanışlıdır ve build komutu Space her güncellendiğinde otomatik çalışır.
+
+Yani `app_build_command: npm run build` ve `app_file: dist/index.html` ayarıyla Vite projesi doğrudan Static Space'te deploy edilebiliyor.
+
+Bu net SDK ayrımı da "ayrı tutma" kararını destekliyor: her parça zaten kendi doğal HF karşılığına oturuyor.
+
+## 3. Her seçenek konfigürasyon açısından ne gerektiriyor?
+
+Bu, ayrı tutmanın **tek gerçek maliyeti** — ama ikisi de tek seferlik/basit bir setup.
+
+### Frontend: build-time API adresi
+
+Vite'ta `VITE_` ön ekiyle başlayan env değişkenleri **build zamanında** koda gömülür, runtime'da değiştirilemez:
+
+> Variables prefixed with `VITE_` will be exposed in client-side source code after Vite bundling; Vite exposes these constants as global variables during dev and statically replaces them at build time.
+
+Pratikte: backend adresi (`VITE_API_URL` gibi) HF Static Space'in **Variables** bölümüne eklenir. Her push sonrası otomatik build tetiklendiğinde yeni değerle koda gömülür. Backend adresi değişirse (örn. custom domain eklenince) frontend'in yeniden build edilmesi gerekir — bu, otomatik deploy kurulumu adımında (sıradaki iş) netleştirilecek bir detay.
+
+### Backend: CORS ayarı
+
+FastAPI'de `CORSMiddleware` ile `allow_origins` listesine frontend'in adresi (Static Space URL'i veya custom domain) yazılmalı. Domain sabitlendikten sonra tek seferlik bir ayar; environment variable/secret olarak tutulursa domain değiştiğinde kod değişikliği gerekmez.
+
+## 4. Hugging Face'te gerçekten ücretsiz olan ne?
+
+Bu kısım kritik — çünkü **Static Space** ile **Docker Space**, aynı ücretsizlik garantisine sahip değil.
+
+| | Static Space | Docker Space |
+|---|---|---|
+| Ücretsiz donanım | CPU Basic (2 vCPU / 16 GB) | CPU Basic (2 vCPU / 16 GB) |
+| Sürekli çalışma | Sürekli servis edilir (statik dosya, compute process yok) | **Ücretsiz katmanda inaktivite sonrası "uykuya dalıyor"** |
+
+Resmi dokümantasyon:
+
+> On free hardware, a Space will "go to sleep" and stop executing after a period of time if unused. If you wish for your Space to run indefinitely, consider upgrading to paid hardware.
+
+Bu kural doğrudan Docker Space'i (backend) etkiliyor. Statik dosya servisi olan Static Space'te "execute edilen" bir process olmadığı için bu sorun pratikte yaşanmıyor.
+
+**Sonuç:** Frontend'i Static Space'te tutarsak gerçekten sürekli online kalır, ücretsiz. Backend (Docker Space) ise ücretsiz katmanda inaktivite sonrası uyuyacaktır — bunu "always-on" tutmak zaten sıradaki araştırma adımı ("ücretsiz always-on sunucu araştırması") olarak ayrılmış; burada çözülmesi gerekmiyor.
+
+### Alternatif: Cloudflare Pages
+
+Frontend için Cloudflare Pages ücretsiz katmanı da oldukça cömert: sınırsız bant genişliği/istek, ayda ~500 build, otomatik Git deploy, custom domain desteği. HF Static Space'e göre pratik bir dezavantajı yok, ama "her şey HF'te olsun" hedefine daha uygun olduğu için ilk adım için **Static Space** öneriyoruz. Cloudflare Pages, "diğer sunuculara geçiş" aşamasında yedek/alternatif olarak değerlendirilebilir.
+
+---
+
+## Öneri (özet)
+
+1. **Frontend ve backend ayrı Space/repo olarak kalsın.**
+2. Frontend → HF **Static Space**
+   - `app_build_command: npm run build`
+   - `app_file: dist/index.html`
+   - API adresi `VITE_API_URL` gibi bir Space Variable olarak build-time'da enjekte edilsin.
+3. Backend → HF **Docker Space**
+   - CORS `allow_origins` listesi frontend'in Space/özel domain adresine göre configure edilsin.
+   - Bu değer secret/variable olarak tutulup domain değişince tek yerden güncellenebilsin.
+4. Backend'in ücretsiz katmanda "uyuma" problemi bu kararın kapsamı dışında — sıradaki "ücretsiz always-on sunucu" araştırmasında ele alınacak.
+
+---
+
+## Kaynaklar
+
+**Hugging Face**
+- Spaces Overview — https://huggingface.co/docs/hub/spaces-overview
+- Static Spaces (frontend) — https://huggingface.co/docs/hub/spaces-sdks-static
+- Docker Spaces (backend) — https://huggingface.co/docs/hub/spaces-sdks-docker
+- Pricing ve donanım — https://huggingface.co/pricing
+
+**Frontend hosting alternatifi**
+- Cloudflare Pages — https://developers.cloudflare.com/pages/
+
+**Konfigürasyon detayları**
+- Vite environment variables (build-time davranışı) — https://vite.dev/guide/env-and-mode.html
+- FastAPI CORS — https://fastapi.tiangolo.com/tutorial/cors/
