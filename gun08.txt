@@ -1,4 +1,0 @@
-14 temmuz 2026
-dockerfile içinde exec ve shell form farkı nedir, multi-stage nedir nasıl ve neden kullanılır
-konularına udemy ve yapayzeka ile çalıştım. bu konulara dair komut satırı üzerinde ve vscode ile 
-alıştırmalar yaptım.

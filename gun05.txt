@@ -1,4 +1,0 @@
-09 temmuz 2026
-
-docker stats top komutları, cpu memory limitleme işlemleri env var atamaları ve ilgili linux komutlarına çalıştım. docker environment önemi ve neden kullanıldığına çalıştım. en son da bunlarla ilgili eklenen gun05_alıştırma.txt dosyasındaki görevleri yaptım.
-bunları yaparken udemy ve yapayzekadan faydalandım. 

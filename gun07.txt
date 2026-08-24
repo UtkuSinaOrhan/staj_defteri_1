@@ -1,4 +1,0 @@
-13 temmuz 2026
-docker hub ve burada repo oluşturma üzerine çalıştım. kendi repomu oluşturdum ve buraya ilk yüklemelerimi de yaptım.
-docker image nasıl oluşturulur ve dockerfile nedir nasıl bir syntaxı vardır bunlara çalıştım.
-terminaldeki komut kısayollarına çalıştım. bunlara çalışırken udemy ve yapayzekadan yararlandım. 

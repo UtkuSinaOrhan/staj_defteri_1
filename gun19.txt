@@ -1,9 +1,0 @@
-30 temmuz 2026
-
-- repoda belirtilen issuelardan #4 numaralı issue üzerinde çalıştım.
-- uygulamayı daha statik versiyonlarla yeniden kurdum.
-- ollama_base_url değişkenlerini kontrol ettim.
-- docker üzerinde network kurulduğunda isimlerle ulaşılan veriler için port ataması yapılmasına gerek görmediğim için 
-docker-compose.yml dosyasından ollama portlarını kaldırdım.
-- compose ile ollama çalıştığında localdeki ile çakışmaması için bunu yaptım.
-- sonucunda daha standartize ve stabil çalışabilen bir uygulamma elde etmiş oldum.

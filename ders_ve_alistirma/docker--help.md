@@ -1,7 +1,6 @@
-docker --help
+# Docker CLI Yardım ve Referans Kılavuzu
 
-
-Flag shorthand -h has been deprecated, use --help
+```text
 Usage:  docker [OPTIONS] COMMAND
 
 A self-sufficient runtime for containers
@@ -22,27 +21,13 @@ Common Commands:
   info        Display system-wide information
 
 Management Commands:
-  agent*      Docker AI Agent Runner
-  ai*         Docker AI Agent - Ask Gordon
   builder     Manage builds
-  buildx*     Docker Buildx
-  compose*    Docker Compose
   container   Manage containers
   context     Manage contexts
-  debug*      Get a shell into any image or container
-  desktop*    Docker Desktop commands
-  dhi*        CLI for managing Docker Hardened Images
-  extension*  Manages Docker extensions
   image       Manage images
-  init*       Creates Docker-related starter files for your project
   manifest    Manage Docker image manifests and manifest lists
-  mcp*        Docker MCP Plugin
-  model*      Docker Model Runner
   network     Manage networks
-  offload*    Docker Offload
-  pass*       Docker Pass Secrets Manager Plugin (beta)
   plugin      Manage plugins
-  scout*      Docker Scout
   system      Manage Docker
   volume      Manage volumes
 
@@ -78,24 +63,4 @@ Commands:
   unpause     Unpause all processes within one or more containers
   update      Update configuration of one or more containers
   wait        Block until one or more containers stop, then print their exit codes
-
-Global Options:
-      --config string      Location of client config files (default "/home/utkusinaorhan/.docker")
-  -c, --context string     Name of the context to use to connect to the daemon (overrides
-                           DOCKER_HOST env var and default context set with "docker context use")
-  -D, --debug              Enable debug mode
-  -H, --host string        Daemon socket to connect to
-  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal")
-                           (default "info")
-      --tls                Use TLS; implied by --tlsverify
-      --tlscacert string   Trust certs signed only by this CA (default
-                           "/home/utkusinaorhan/.docker/ca.pem")
-      --tlscert string     Path to TLS certificate file (default
-                           "/home/utkusinaorhan/.docker/cert.pem")
-      --tlskey string      Path to TLS key file (default "/home/utkusinaorhan/.docker/key.pem")
-      --tlsverify          Use TLS and verify the remote
-  -v, --version            Print version information and quit
-
-Run 'docker COMMAND --help' for more information on a command.
-
-For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+```

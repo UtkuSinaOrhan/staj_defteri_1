@@ -1,6 +1,0 @@
-17 temmuz 2026
-
-dockerda compose yapısını öğrendim. compose ne işe yarar ve neden kullanılır bunlara çalıştım.
-docker-compose.yml dosyası yazmayı öğrendim.
-compose CLI komutlarına çalıştım
-bunları yaparken kaynak olarak udemy ve gemini kullandım.

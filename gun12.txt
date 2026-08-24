@@ -1,6 +1,0 @@
-21 temmuz 2026
-
-demo task aldım ve bunun için araştırmalar yaptım.
--redis
--postgresql
--adminer image

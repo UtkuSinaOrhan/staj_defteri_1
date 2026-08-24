@@ -1,8 +1,0 @@
-27 temmuz 2026
-
-ollama problemini çözdüm
-
-uygulama üzerinde :
-
-logical error var mı diye kod düzeyinde kontrol ettim.
-bir site ile uygulama üzerinden de ayrıca testlerimi yaptım.

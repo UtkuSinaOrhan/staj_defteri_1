@@ -1,7 +1,0 @@
-22 temmuz 2026
-
-demo task ile ilgili çalışma yaptım ve bu çalışmayı githuba yükledim.
-- imajların docker-compose entegrasyonuna baktım. 
-- docker-compose.yaml dosyasını yazdım.
-- terminal çalışma kodları ile çalıştım.
-- github repo linki: https://github.com/UtkuSinaOrhan/demo_task
